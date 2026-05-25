@@ -21,9 +21,9 @@ jobs:
           chmod +x CloudflareST
           ./CloudflareST -o ip.txt
 
-      - name: Generate ipyx.txt (top 10 IPs sorted by latency)
+      - name: Generate ipyx.txt (cfnew format: IP:443#优选01,...)
         run: |
-          tail -n +2 ip.txt | sort -t',' -k5 -n | head -10 | cut -d',' -f1 > ipyx.txt
+          tail -n +2 ip.txt | sort -t',' -k5 -n | head -10 | cut -d',' -f1 | awk '{printf "%s:443#优选%02d%s", $0, NR, (NR<10?",":"")}' > ipyx.txt
 
       - name: Commit and push if changed
         run: |
